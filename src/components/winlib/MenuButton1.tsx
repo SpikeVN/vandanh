@@ -67,7 +67,7 @@ export default function MenuButton1(
                     right: "8rem",
                     top: "1.5rem",
                 }}
-                class="text-2xl"
+                class="text-2xl font-semibold"
             >
                 {props.children}
             </p>

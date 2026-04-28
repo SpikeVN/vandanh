@@ -158,7 +158,7 @@ function LogoCTE(props: { doneCallback: () => void }) {
                 class="h-18 w-auto"
                 alt="Logo CLB Khoa học công nghệ trong Kinh tế và Kinh doanh"
             />
-            <div ref={text} class="flex flex-col w-full text-xl">
+            <div ref={text} class="flex flex-col w-full text-xl font-semibold">
                 <p id="cte-line1">CLUB OF TECHNOLOGY</p>
                 <p id="cte-line2">IN ECONOMICS</p>
             </div>
@@ -267,8 +267,8 @@ function LogoFTUAndFYU(props: { doneCallback: () => void }) {
                     class="h-24 sm:h-18 w-auto"
                 />
                 <div ref={ftuText} class="hidden sm:block">
-                    <p class="leading-5">TRƯỜNG ĐẠI HỌC</p>
-                    <p class="leading-5">NGOẠI THƯƠNG</p>
+                    <p class="leading-5 font-semibold">TRƯỜNG ĐẠI HỌC</p>
+                    <p class="leading-5 font-semibold">NGOẠI THƯƠNG</p>
                 </div>
             </div>
             <div class="flex flex-row gap-5 items-center justify-start">
@@ -278,8 +278,8 @@ function LogoFTUAndFYU(props: { doneCallback: () => void }) {
                     class="h-24 sm:h-18 w-auto"
                 />
                 <div ref={fyuText} class="hidden sm:block">
-                    <p class="leading-5">ĐOÀN TNCS HỒ CHÍ MINH</p>
-                    <p class="leading-5">TRƯỜNG ĐH NGOẠI THƯƠNG</p>
+                    <p class="leading-5 font-semibold">ĐOÀN TNCS HỒ CHÍ MINH</p>
+                    <p class="leading-5 font-semibold">TRƯỜNG ĐH NGOẠI THƯƠNG</p>
                 </div>
             </div>
         </div>
@@ -352,10 +352,10 @@ function LogoNTQ(props: { doneCallback: () => void }) {
         >
             <div class="flex flex-col gap-10 items-center justify-start">
                 <div ref={ntqText} class="flex flex-col items-center">
-                    <p class="leading-5 italic text-gray-400">
+                    <p class="leading-5 italic text-gray-400 font-semibold">
                         in collaboration with
                     </p>
-                    <p class="leading-5 text-xl">NTQ Solutions, JSC</p>
+                    <p class="leading-5 text-xl font-semibold">NTQ Solutions, JSC</p>
                 </div>
                 <img
                     ref={ntqImage}
