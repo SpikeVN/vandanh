@@ -1,0 +1,30 @@
+#hover-button-bg {
+    fill: var(--color-bg);
+    transition: fill 100ms ease;
+}
+
+#hover-button:hover p {
+    color: var(--color-bg);
+}
+
+#button-pattern {
+    fill: var(--color-fg2);
+}
+
+#button-chevron {
+    fill: var(--color-fg);
+}
+
+#hover-button:hover #hover-button-bg {
+    fill: var(--color-fg);
+}
+
+#hover-button:hover #button-pattern {
+    fill: var(--color-fg);
+}
+
+#hover-button:hover #button-chevron {
+    fill: var(--color-bg);
+}
+
+

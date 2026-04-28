@@ -1,0 +1,75 @@
+.standard-window {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    min-width: 200px;
+    min-height: 100px;
+}
+
+.standard-window-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: var(--color-fg); /* Border color */
+    clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+}
+
+.standard-window-inner::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    background: var(--color-bg);
+    clip-path: inherit;
+    z-index: -1;
+}
+
+.standard-titlebar {
+    padding: 5px 15px;
+    background: var(--color-fg);
+    color: var(--color-bg);
+    font-weight: bold;
+    font-size: 14px;
+    cursor: grab;
+    user-select: none;  
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 1px; /* Avoid overlapping the outer 1px border */
+    /* Ensure titlebar also follows the top clip path */
+    clip-path: polygon(9px 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%, 0 9px);
+}
+
+.standard-titlebar:active {
+    cursor: grabbing;
+}
+
+.standard-content {
+    flex: 1;
+    padding: 10px 15px;
+    color: #e0e0e0;
+    overflow: auto;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Scrollbar styling */
+.standard-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.standard-content::-webkit-scrollbar-track {
+    background: #0f3460;
+    border-radius: 4px;
+}
+
+.standard-content::-webkit-scrollbar-thumb {
+    background: #16213e;
+    border-radius: 4px;
+}
+
+.standard-content::-webkit-scrollbar-thumb:hover {
+    background: #1a1a2e;
+}

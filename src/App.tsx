@@ -1,0 +1,67 @@
+/**
+ *  Mã nguồn của Vấn Danh - Game tiền sự kiện DSTC 2026
+ *  Copyright (C) 2026  CLB KHCN trong Kinh tế và Kinh doanh
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+import { createSignal, Match, Switch, type Component } from "solid-js";
+import { GameStage, Progress, UserData } from ".";
+
+import LoadingScreen from "./components/LoadingScreen";
+import MainMenu from "./components/MainMenu";
+import Game from "./components/Game";
+import { registerEvent } from "./engine/chatTrigger";
+
+const App: Component = () => {
+    let [stage, setStage] = createSignal(GameStage.PLAY);
+    let userdata: UserData = {
+        name: "Lân",
+        email: "lan@cteftu.id.vn",
+        currentSave: "",
+        saves: new Map<string, Progress>(),
+    };
+
+    registerEvent("changescreen_loading", () => setStage(GameStage.LOADING_SCREEN));
+    registerEvent("changescreen_main_menu", () => setStage(GameStage.MAIN_MENU));
+    registerEvent("changescreen_play", () => setStage(GameStage.PLAY));
+    registerEvent("changescreen_saves", () => setStage(GameStage.SAVES));
+    registerEvent("changescreen_settings", () => setStage(GameStage.SETTINGS));
+    registerEvent("changescreen_credits", () => setStage(GameStage.CREDITS));
+
+    return (
+        <Switch>
+            <Match when={stage() == GameStage.LOADING_SCREEN}>
+                <LoadingScreen
+                    doneCallback={() => {
+                        console.log("calling the next stage");
+                        setStage(GameStage.MAIN_MENU);
+                    }}
+                />
+            </Match>
+            <Match when={stage() == GameStage.MAIN_MENU}>
+                <MainMenu
+                    doneCallback={(nextStage) => {
+                        setStage(nextStage);
+                    }}
+                />
+            </Match>
+            <Match when={stage() == GameStage.PLAY}>
+                <Game userdata={userdata} />
+            </Match>
+        </Switch>
+    );
+};
+
+export default App;

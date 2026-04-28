@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+@import "../assets/fonts/fonts.css";
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: "Chakra Petch";
+    font-weight: normal;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    line-height: normal;
+}
+
+.clipped-border {
+    position: relative;
+    background: var(--color-fg);
+}
+
+.clipped-border::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    background: var(--color-bg);
+    clip-path: inherit;
+    z-index: -1;
+}
+
+@theme {
+    --font-display: "Chakra Petch";
+    --font-ocr: "OCR-A BT"; 
+    --font-ocrvn: "Chakra Petch"; 
+    --font-mont: "Montserrat"; 
+
+    --color-bg: #080D15;
+    --color-fg: #BECDD0;
+    --color-fg2: #324041;
+}

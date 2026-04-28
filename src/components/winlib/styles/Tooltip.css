@@ -1,0 +1,95 @@
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+
+    --clip-amount: 15px;
+    cursor: none;
+}
+
+.tooltip {
+    position: absolute;
+    pointer-events: none;
+    animation: tooltipFadeIn 100ms ease;
+    min-width: 20rem;
+    height: 5rem;
+}
+
+.tooltip-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+
+    margin-left: 22px;
+    margin-top: -1px;
+
+    background-color: var(--color-fg);
+    color: var(--color-fg);
+    
+    clip-path: polygon(
+        0 0, 
+        calc(100% - var(--clip-amount)) 0, 
+        100% var(--clip-amount), 
+        100% 100%, 
+        var(--clip-amount) 100%,
+        0 calc(100% - var(--clip-amount)),
+        0 0
+    );
+}
+
+.tooltip-text {
+    width: 100%;
+    height: 100%;
+
+    margin-top: -0.5rem;
+    padding-left: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.tooltip-title {
+    font-weight: 600;
+    padding: 0.1rem 1rem;
+    width: fit-content;
+    padding-right: 2rem;
+
+    clip-path: polygon(
+        0 0, 
+        100% 0, 
+        calc(100% - var(--clip-amount)) 100%, 
+        0 100%, 
+        0 0
+    );
+    
+    color: var(--color-bg);
+    background: var(--color-fg);
+
+}
+
+.tooltip-content::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    background: var(--color-bg);
+    clip-path: inherit;
+    z-index: -1;
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.tooltip-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    /* transform: translateX(-50%); */
+}

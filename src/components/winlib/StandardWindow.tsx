@@ -1,0 +1,76 @@
+import { type Component, type JSX } from "solid-js";
+import DraggableWindow, { type DraggableWindowAPI } from "./DraggableWindow";
+import "./styles/StandardWindow.css";
+
+/**
+ * API exposed by StandardWindow to allow programmatic control.
+ */
+export type StandardWindowAPI = DraggableWindowAPI;
+
+/**
+ * Props for configuring the StandardWindow component.
+ */
+interface StandardWindowProps {
+    /** The title displayed in the window's title bar. */
+    title?: string;
+    /** The child elements to render inside the window. */
+    children?: JSX.Element;
+    /** The initial X position of the window. Defaults to center of screen. */
+    initialX?: number;
+    /** The initial Y position of the window. Defaults to center of screen. */
+    initialY?: number;
+    /** The initial width of the window in pixels. */
+    initialWidth?: number;
+    /** The initial height of the window in pixels. */
+    initialHeight?: number;
+    /** Callback fired when the window receives focus. */
+    onFocus?: (zIndex: number) => void;
+    /** If true, uses a higher z-index layer. */
+    alwaysOnTop?: boolean;
+    /** Custom base z-index. Overrides normal and alwaysOnTop behavior. */
+    baseZIndex?: number;
+    /**
+     * The dragging mode.
+     * 'selector' uses draggableSelector.
+     * 'topbar' uses draggableHeight.
+     * 'anywhere' allows dragging from any part of the window.
+     */
+    draggableMode?: "selector" | "topbar" | "anywhere";
+    /** Height in pixels from the window top that is draggable. Used when mode is 'topbar'. */
+    draggableHeight?: number;
+    /** CSS selector for the draggable area. Used when mode is 'selector'. */
+    draggableSelector?: string;
+    /** If true, the window can be dragged off-screen. Defaults to true. */
+    allowOffScreen?: boolean;
+    /** Callback to receive the StandardWindowAPI instance. */
+    apiRef?: (api: StandardWindowAPI) => void;
+}
+
+const StandardWindow: Component<StandardWindowProps> = (props) => {
+    const title = () => props.title ?? "Window";
+
+    return (
+        <DraggableWindow
+            apiRef={props.apiRef}
+            draggableMode={props.draggableMode ?? "topbar"}
+            draggableHeight={props.draggableHeight}
+            draggableSelector={props.draggableSelector}
+            class="standard-window"
+            initialX={props.initialX}
+            initialY={props.initialY}
+            initialWidth={props.initialWidth}
+            initialHeight={props.initialHeight}
+            onFocus={props.onFocus}
+            alwaysOnTop={props.alwaysOnTop}
+            baseZIndex={props.baseZIndex}
+            allowOffScreen={props.allowOffScreen}
+        >
+            <div class="standard-window-inner">
+                <div class="standard-titlebar">{title()}</div>
+                <div class="standard-content">{props.children}</div>
+            </div>
+        </DraggableWindow>
+    );
+};
+
+export default StandardWindow;

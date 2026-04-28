@@ -1,0 +1,15 @@
+.basicbutton {
+    background-color: var(--color-fg);
+    color: var(--color-fg);
+    transition: 200ms ease;
+}
+
+.basicbutton:hover {
+    background-color: var(--color-fg);
+    color: var(--color-bg);
+}
+
+.basicbutton:hover::after {
+    background-color: var(--color-fg);
+    transition: 200ms ease;
+}

@@ -1,0 +1,47 @@
+.visualnovel-window {
+    --resize-handle-n-top: 32px;
+}
+
+.visualnovel-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.visualnovel-title {
+    background-color: var(--color-fg);
+    color: var(--color-bg);
+    min-width: fit-content;
+    width: 8rem;
+    padding: 9px 18px;
+    --corners-cut: 15px;
+
+    clip-path: polygon(0 0, 100% 0, 100% var(--corners-cut), 100% calc(100% - var(--corners-cut)), calc(100% - var(--corners-cut)) 100%, 0 100%, 0 100%, 0 0);
+    margin-bottom: -1rem;
+    position: relative;
+    z-index: 2;
+}
+
+
+.visualnovel-content {
+    position: relative;
+    display: flex;
+    background: var(--color-fg);
+    padding: 0.75rem 0.5rem;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+
+    --corners-cut: 20px;
+    clip-path: polygon(0 0, calc(100% - var(--corners-cut)) 0, 100% var(--corners-cut), 100% calc(100% - var(--corners-cut)), calc(100% - var(--corners-cut)) 100%, var(--corners-cut) 100%, 0 calc(100% - var(--corners-cut)), 0 var(--corners-cut));
+}
+
+.visualnovel-content::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    background: var(--color-bg);
+    clip-path: inherit;
+    z-index: -1;
+}
