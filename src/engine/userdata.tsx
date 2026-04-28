@@ -10,7 +10,7 @@ export let userdata: UserData = {
             name: "Default Save",
             timestamp: 0,
             path: "intro_game1",
-            index: 15,
+            index: import.meta.env.DEV ? 15 : 0,
         },
     },
 };

@@ -49,6 +49,7 @@ export default function DSTCWindow() {
                             y: 0,
                             duration: 0.3,
                             ease: "power2.out",
+                            // @ts-ignore
                             onComplete: () => setIsTransitioning(false),
                         },
                     );
