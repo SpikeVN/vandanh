@@ -5,6 +5,8 @@ import devtools from 'solid-devtools/vite';
 
 export default defineConfig({
   plugins: [devtools(), solidPlugin(), tailwindcss()],
+  // Temporarily before moving on to a custom domain
+  base: "/vandanh/",
   server: {
     port: 3000,
   },
