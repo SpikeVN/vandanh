@@ -4,6 +4,7 @@ import {
     onCleanup,
     onMount,
     createEffect,
+    createMemo,
 } from "solid-js";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
@@ -93,6 +94,13 @@ const VisualNovelTextWindow: Component = (props) => {
     const [isWaitingForInput, setIsWaitingForInput] = createSignal(false);
     const [characterName, setCharacterName] = createSignal("");
 
+    const isHidden = createMemo(() => {
+        return (
+            characterName() === "" &&
+            (currentText() === "" || currentText() === null)
+        );
+    });
+
     let timeline: gsap.core.Timeline | null = null;
     let mouseDownTime = 0;
 
@@ -142,22 +150,11 @@ const VisualNovelTextWindow: Component = (props) => {
 
     const loadNextText = () => {
         setIsWaitingForInput(false);
-        const nextText = getNextText();
-
-        if (nextText === null) {
-            // No more text
-            setCurrentText(null);
-            setTextFormat("normal");
-            return;
-        }
-
-        const parsed = parseMarkdown(nextText[2]);
-        setCurrentText(parsed.text);
-        setTextFormat(parsed.format);
-        setCharacterName(nextText[1]);
+        getNextText();
     };
 
     const handleAdvance = () => {
+        if (isHidden()) return;
         if (isAnimating()) {
             // Skip to end of animation
             if (timeline) {
@@ -192,15 +189,6 @@ const VisualNovelTextWindow: Component = (props) => {
     };
 
     onMount(() => {
-        // Load initial state from the script engine without advancing
-        const line = currentLine();
-        if (line) {
-            const parsed = parseMarkdown(line[2]);
-            setCurrentText(parsed.text);
-            setTextFormat(parsed.format);
-            setCharacterName(line[1]);
-        }
-
         // Add event listeners
         document.addEventListener("keydown", handleKeyDown);
         // Attach listeners to the text container
@@ -211,8 +199,19 @@ const VisualNovelTextWindow: Component = (props) => {
     });
 
     createEffect(() => {
-        // Trigger animation whenever currentText changes
-        if (currentText() !== null) {
+        // Synchronize with global script state
+        const line = currentLine();
+        if (line) {
+            const parsed = parseMarkdown(line[2]);
+            setCharacterName(line[1]);
+            setCurrentText(parsed.text);
+            setTextFormat(parsed.format);
+        }
+    });
+
+    createEffect(() => {
+        // Trigger animation whenever currentText changes and it's not a hidden line
+        if (currentText() !== null && !isHidden()) {
             animateText();
         }
     });
@@ -229,42 +228,41 @@ const VisualNovelTextWindow: Component = (props) => {
     });
 
     return (
-        <DraggableWindow
-            draggableMode="anywhere"
-            initialWidth={825}
-            initialHeight={150}
-            class="visualnovel-window"
-            initialX={window.innerWidth / 2 - 412}
-            initialY={window.innerHeight - 150 - 24}
-            alwaysOnTop={true}
-        >
-            <div
-                class="visualnovel-outer select-none"
-                style={{
-                    "user-select": "none",
-                }}
+        <div style={{ display: isHidden() ? "none" : "block" }}>
+            <DraggableWindow
+                draggableMode="anywhere"
+                initialWidth={825}
+                initialHeight={150}
+                class="visualnovel-window"
+                initialX={window.innerWidth / 2 - 412}
+                initialY={window.innerHeight - 150 - 24}
+                alwaysOnTop={true}
             >
-                <div class="visualnovel-title text-md font-semibold">
-                    {characterName()}
-                </div>
                 <div
-                    ref={textContainer}
-                    class="visualnovel-content cursor-pointer"
+                    class="visualnovel-outer select-none"
+                    style={{
+                        "user-select": "none",
+                    }}
                 >
-                    <p
-                        ref={textElement}
-                        class={`text-lg font-normal text-white text-left px-4 pt-4 vn-text-${textFormat()}`}
-                        style={{
-                            "word-wrap": "break-word",
-                        }}
-                    />
+                    <div class="visualnovel-title text-md font-semibold">
+                        {characterName()}
+                    </div>
+                    <div
+                        ref={textContainer}
+                        class="visualnovel-content cursor-pointer"
+                    >
+                        <p
+                            ref={textElement}
+                            class={`text-lg font-normal text-white text-left px-4 pt-4 vn-text-${textFormat()}`}
+                            style={{
+                                "word-wrap": "break-word",
+                            }}
+                        />
+                    </div>
                 </div>
-            </div>
-        </DraggableWindow>
+            </DraggableWindow>
+        </div>
     );
 };
 
 export default VisualNovelTextWindow;
-function onDone() {
-    throw new Error("Function not implemented.");
-}

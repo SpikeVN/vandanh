@@ -5,18 +5,58 @@ import {
     Match,
     onMount,
     For,
+    createEffect,
 } from "solid-js";
 import DraggableWindow from "./winlib/DraggableWindow";
 import "./styles/DSTCWindow.css";
 import BasicButton from "./winlib/BasicButton";
 import Tooltip from "./winlib/Tooltip";
 import { userdata } from "../engine/userdata";
+import { gotoLine, sceneAt } from "../engine/script";
+import userFrame from "../../assets/images/userframe.svg";
+import star from "../../assets/images/star.svg";
+import gsap from "gsap";
 
 export default function DSTCWindow() {
     let [ww, setww] = createSignal(936);
     let [wh, setwh] = createSignal(500);
+    let windowApi: any;
+    let contentRef!: HTMLDivElement;
 
-    let [windowContent, setWindowContent] = createSignal("registration");
+    // Track the current scene to handle transitions
+    const currentScene = () => sceneAt(2);
+    const [renderedScene, setRenderedScene] = createSignal(currentScene());
+    const [isTransitioning, setIsTransitioning] = createSignal(false);
+
+    createEffect(() => {
+        const nextScene = currentScene();
+        if (nextScene !== renderedScene() && !isTransitioning()) {
+            setIsTransitioning(true);
+            // Fade out
+            gsap.to(contentRef, {
+                opacity: 0,
+                y: -10,
+                duration: 0.2,
+                ease: "power2.in",
+                onComplete: () => {
+                    setRenderedScene(nextScene);
+                    // Fade in
+                    gsap.fromTo(
+                        contentRef,
+                        { opacity: 0, y: 10 },
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.3,
+                            ease: "power2.out",
+                            onComplete: () => setIsTransitioning(false),
+                        },
+                    );
+                },
+            });
+        }
+    });
+
     // Make path and viewbox reactive using createMemo
     let path = createMemo(
         () => `
@@ -40,6 +80,9 @@ export default function DSTCWindow() {
 
     return (
         <DraggableWindow
+            id="dstc-dashboard"
+            title="DSTC 2026 - Dashboard thí sinh"
+            apiRef={(api) => (windowApi = api)}
             draggableMode="anywhere"
             initialWidth={ww}
             initialHeight={wh}
@@ -47,6 +90,7 @@ export default function DSTCWindow() {
             onHeightChange={setwh}
             minWidth={842}
             minHeight={100}
+            initialY={25}
         >
             <div class="w-full h-full">
                 <div class="absolute decor w-full h-full">
@@ -85,10 +129,20 @@ export default function DSTCWindow() {
                 <div
                     style={{ height: "calc(100% - 29px)" }}
                     class="absolute w-full top-[29px] left-0"
+                    ref={contentRef}
                 >
-                    <Switch>
-                        <Match when={windowContent() === "registration"}>
-                            <DSTCRegistration />
+                    <Switch fallback={<div class="h-full w-full">
+                                <DSTCMatchFound windowApi={windowApi} />
+                            </div>}>
+                        <Match when={renderedScene() === "menu"}>
+                            <div class="h-full w-full">
+                                <DSTCRegistration />
+                            </div>
+                        </Match>
+                        <Match when={renderedScene() === "findingmatch"}>
+                            <div class="h-full w-full">
+                                <DSTCFindingMatch />
+                            </div>
                         </Match>
                     </Switch>
                 </div>
@@ -102,7 +156,6 @@ function formatSeconds(totalSeconds: number): string {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
 
-    // Use padStart to ensure 2-digit format (e.g., 05 instead of 5)
     const h = String(hours).padStart(2, "0");
     const m = String(minutes).padStart(2, "0");
     const s = String(seconds).padStart(2, "0");
@@ -177,7 +230,7 @@ function DSTCRegistration() {
     });
 
     return (
-        <div class="w-full h-full">
+        <div class="w-full h-full flex flex-col">
             <div class="w-full py-2 px-6">
                 Chào buổi {hours < 12 ? "sáng" : hours < 18 ? "chiều" : "tối"},{" "}
                 {userdata.name}.
@@ -192,7 +245,7 @@ function DSTCRegistration() {
                     {formatSeconds(timeLeft())}
                 </div>
             </div>
-            <div class="relative w-full h-full">
+            <div class="relative w-full h-full flex flex-col">
                 <div class="absolute font-ocr text-[14px] leading-4 text-fg2 top-4 left-6">
                     HTTPS / 20ms ping <br />
                     Connection stable, FLA 1.0x
@@ -204,11 +257,126 @@ function DSTCRegistration() {
                     </For>
                 </div>
 
-                <div>
-                    <Tooltip title="Lỗi" content="Bạn không có bạn bè. Loser.">
-                        <BasicButton>MATCH BẠN BÈ</BasicButton>
-                    </Tooltip>
+                <div class="w-full h-full p-4 flex flex-col items-end justify-between">
+                    <div class="w-full h-full flex flex-row items-center justify-around">
+                        <Tooltip
+                            title="Lỗi"
+                            content="Bạn không có bạn bè. Loser."
+                        >
+                            <BasicButton class="font-semibold">
+                                MATCH BẠN BÈ
+                            </BasicButton>
+                        </Tooltip>
+                        <BasicButton
+                            class="font-semibold"
+                            onClick={() => {
+                                gotoLine("s1->findingmatch");
+                                setTimeout(() => {
+                                    gotoLine("s1->matchfound");
+                                }, 3000);
+                            }}
+                        >
+                            RANDOM MATCH
+                        </BasicButton>
+                    </div>
+                    <div>
+                        <p class="text-4xl font-semibold text-right">
+                            Data Science Talent
+                            <br />
+                            Competition 2026
+                        </p>
+                    </div>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+function DSTCFindingMatch() {
+    return (
+        <div class="w-full h-full flex flex-col items-center justify-center gap-6">
+            <p class="text-2xl font-semibold">Đang tìm kiếm đồng đội...</p>
+            <div class="loader" />
+        </div>
+    );
+}
+
+function DSTCMatchFound(props: { windowApi: any }) {
+    return (
+        <div class="w-full h-full flex flex-col p-8">
+            <p class="text-2xl font-bold text-[#becdd0] mb-8 text-center uppercase tracking-wider">
+                Thông tin đồng đội
+            </p>
+
+            <div class="flex flex-row gap-12 items-start justify-center">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="relative w-[165px] h-[195px]">
+                        <img
+                            src={userFrame}
+                            alt="Avatar Frame"
+                            class="absolute inset-0 w-full h-full"
+                        />
+                    </div>
+                    <div class="bg-[#becdd0] flex flex-row gap-2 px-3 py-1 text-[#080d15] font-ocr text-sm">
+                        <span>ID</span>
+                        <span>42414E47</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2 text-[#becdd0]">
+                    <p class="text-4xl font-bold mb-2">@docaubiettolaai</p>
+
+                    <div class="grid grid-cols-[180px_1fr] gap-y-1 text-xl">
+                        <span class="font-bold">Đơn vị</span>
+                        <span>Trường Đại học Ngoại Thương</span>
+
+                        <span class="font-bold">Chuyên ngành</span>
+                        <span>Khoa học máy tính</span>
+
+                        <span class="font-bold">Sở trường</span>
+                        <span>coding, xàm, a#RF</span>
+
+                        <span class="font-bold">Mục tiêu</span>
+                        <span>vô địch DSTC 2026</span>
+
+                        <span class="font-bold">Đánh giá portfolio</span>
+                        <div class="flex flex-row items-center gap-3">
+                            <span>5.0</span>
+                            <div class="flex flex-row gap-1">
+                                <For each={[1, 2, 3, 4, 5]}>
+                                    {() => (
+                                        <img
+                                            src={star}
+                                            alt="Star"
+                                            class="w-4 h-4"
+                                        />
+                                    )}
+                                </For>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-auto pb-4">
+                <BasicButton
+                    class="flex flex-row items-center gap-4 px-6"
+                    onClick={() => {
+                        gotoLine("s1->chat");
+                        // if (props.windowApi) {
+                        //     props.windowApi.moveTo(
+                        //         50,
+                        //         props.windowApi.getPosition().y,
+                        //         {
+                        //             duration: 0.5,
+                        //             ease: "power2.inOut",
+                        //         },
+                        //     );
+                        // }
+                    }}
+                >
+                    <span class="text-xl font-semibold">Mở chat</span>
+                </BasicButton>
             </div>
         </div>
     );

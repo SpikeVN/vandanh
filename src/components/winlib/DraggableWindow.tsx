@@ -1,11 +1,15 @@
 import {
     createSignal,
     onCleanup,
+    onMount,
+    createEffect,
+    batch,
     type Component,
     type JSX,
     type Accessor,
 } from "solid-js";
 import { gsap } from "gsap";
+import { registerWindow, unregisterWindow } from "../../engine/windowManager";
 import "./styles/DraggableWindow.css";
 
 /**
@@ -45,6 +49,10 @@ export interface DraggableWindowAPI {
  * Props for configuring the DraggableWindow component.
  */
 interface DraggableWindowProps {
+    /** Unique identifier for the window. */
+    id?: string;
+    /** Human-readable title for the window. */
+    title?: string;
     /** The child elements to render inside the window. */
     children?: JSX.Element;
     /** The initial X position of the window. Defaults to center of screen. */
@@ -151,43 +159,75 @@ const DraggableWindow: Component<DraggableWindowProps> = (props) => {
 
     let windowRef: HTMLDivElement | undefined;
 
-    if (props.apiRef) {
-        props.apiRef({
-            moveTo: (x: number, y: number, options?: gsap.TweenVars) => {
-                const currentPos = { ...position() };
-                gsap.to(currentPos, {
+    // Surgical update for position to ensure maximum smoothness
+    createEffect(() => {
+        const pos = position();
+        if (windowRef) {
+            windowRef.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+        }
+    });
+
+    const api: DraggableWindowAPI = {
+        moveTo: (x: number, y: number, options?: gsap.TweenVars) => {
+            if (!options || options.duration === 0) {
+                batch(() => setPosition({ x, y }));
+                return;
+            }
+
+            if (windowRef) {
+                // Animate DOM directly for 60fps smoothness
+                gsap.to(windowRef, {
                     x,
                     y,
                     ...options,
-                    onUpdate: () => {
-                        setPosition({ x: currentPos.x, y: currentPos.y });
+                    onStart: () => {
+                        windowRef!.style.willChange = "transform";
+                        options?.onStart?.();
+                    },
+                    onComplete: () => {
+                        windowRef!.style.willChange = "auto";
+                        // Sync signal once at the end
+                        batch(() => setPosition({ x, y }));
+                        options?.onComplete?.();
                     },
                 });
-            },
-            resizeTo: (
-                width: number,
-                height: number,
-                options?: gsap.TweenVars,
-            ) => {
-                const currentSize = { ...size() };
-                gsap.to(currentSize, {
-                    width,
-                    height,
-                    ...options,
-                    onUpdate: () => {
-                        setSize({
-                            width: currentSize.width,
-                            height: currentSize.height,
-                        });
-                        props.onWidthChange?.(currentSize.width);
-                        props.onHeightChange?.(currentSize.height);
-                    },
-                });
-            },
-            getPosition: () => position(),
-            getSize: () => size(),
-        });
+            }
+        },
+        resizeTo: (width: number, height: number, options?: gsap.TweenVars) => {
+            if (!options || options.duration === 0) {
+                setSize({ width, height });
+                props.onWidthChange?.(width);
+                props.onHeightChange?.(height);
+                return;
+            }
+            const currentSize = { ...size() };
+            gsap.to(currentSize, {
+                width,
+                height,
+                ...options,
+                onUpdate: () => {
+                    setSize({
+                        width: currentSize.width,
+                        height: currentSize.height,
+                    });
+                    props.onWidthChange?.(currentSize.width);
+                    props.onHeightChange?.(currentSize.height);
+                },
+            });
+        },
+        getPosition: () => position(),
+        getSize: () => size(),
+    };
+
+    if (props.apiRef) {
+        props.apiRef(api);
     }
+
+    onMount(() => {
+        const id = props.id || `win-${Math.random().toString(36).substr(2, 9)}`;
+        registerWindow(id, props.title || id, api);
+        onCleanup(() => unregisterWindow(id));
+    });
 
     const bringToFront = () => {
         if (props.baseZIndex !== undefined) {
@@ -409,8 +449,6 @@ const DraggableWindow: Component<DraggableWindowProps> = (props) => {
             class={`textwindow ${props.class || ""}`}
             onClick={() => bringToFront()}
             style={{
-                left: `${position().x}px`,
-                top: `${position().y}px`,
                 width: `${size().width}px`,
                 height: `${size().height}px`,
                 "z-index": zIndex(),

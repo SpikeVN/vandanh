@@ -1,4 +1,4 @@
-import { createSignal, createMemo } from "solid-js";
+import { createSignal, createMemo, JSX, Accessor } from "solid-js";
 import "./styles/Tooltip.css";
 
 interface TooltipProps {
@@ -13,7 +13,6 @@ export default function Tooltip(props: TooltipProps) {
     const [isVisible, setIsVisible] = createSignal(false);
     const [mouseX, setMouseX] = createSignal(0);
     const [mouseY, setMouseY] = createSignal(0);
-    const [wrapperRect, setWrapperRect] = createSignal<DOMRect | null>(null);
     const delay = () => props.delay || 200;
     const position = () => props.position || "bottom";
     let timeoutId: number | undefined;
@@ -33,22 +32,20 @@ export default function Tooltip(props: TooltipProps) {
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-        setMouseX(e.clientX);
-        setMouseY(e.clientY);
-        if (wrapperRef && !wrapperRect()) {
-            setWrapperRect(wrapperRef.getBoundingClientRect());
-        }
+        if (!wrapperRef) return;
+        const rect = wrapperRef.getBoundingClientRect();
+        setMouseX(e.clientX - rect.left);
+        setMouseY(e.clientY - rect.top);
     };
 
-    const tooltipStyle = createMemo(() => {
-        if (position() !== "bottom") return {};
-        const rect = wrapperRect();
-        if (!rect) return {};
-        const relativeX = mouseX() - rect.left;
-        const relativeY = mouseY() - rect.top;
+    // @ts-ignore
+    const tooltipStyle: Accessor<JSX.CSSProperties> = createMemo(() => {
         return {
-            left: `${relativeX}px`,
-            top: `${relativeY}px`,
+            position: "absolute",
+            left: `${mouseX()}px`,
+            top: `${mouseY()}px`,
+            "z-index": 999999,
+            "pointer-events": "none",
         };
     });
 

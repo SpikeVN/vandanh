@@ -14,7 +14,10 @@
     width: 100%;
     height: 100%;
     background: var(--color-fg); /* Border color */
-    clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+
+    --clip-amount: 20px;
+
+    clip-path: polygon(0px 0, calc(100% - var(--clip-amount)) 0, 100% var(--clip-amount), 100%  100%, var(--clip-amount) 100%, 0 calc(100% - var(--clip-amount)), 0 var(--clip-amount));
 }
 
 .standard-window-inner::after {
@@ -27,7 +30,7 @@
 }
 
 .standard-titlebar {
-    padding: 5px 15px;
+    padding: 8px 18px;
     background: var(--color-fg);
     color: var(--color-bg);
     font-weight: bold;
@@ -37,9 +40,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    margin: 1px; /* Avoid overlapping the outer 1px border */
-    /* Ensure titlebar also follows the top clip path */
-    clip-path: polygon(9px 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%, 0 9px);
 }
 
 .standard-titlebar:active {

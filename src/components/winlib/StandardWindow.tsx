@@ -11,6 +11,8 @@ export type StandardWindowAPI = DraggableWindowAPI;
  * Props for configuring the StandardWindow component.
  */
 interface StandardWindowProps {
+    /** Unique identifier for the window. */
+    id?: string;
     /** The title displayed in the window's title bar. */
     title?: string;
     /** The child elements to render inside the window. */
@@ -51,7 +53,9 @@ const StandardWindow: Component<StandardWindowProps> = (props) => {
 
     return (
         <DraggableWindow
+            id={props.id}
             apiRef={props.apiRef}
+            title={props.title}
             draggableMode={props.draggableMode ?? "topbar"}
             draggableHeight={props.draggableHeight}
             draggableSelector={props.draggableSelector}

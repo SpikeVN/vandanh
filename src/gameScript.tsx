@@ -1,5 +1,5 @@
 ﻿import { showNotification } from "./engine/notification";
-import { ScriptEntry } from "./engine/script";
+import { getWindowApi, moveWindow, ScriptEntry } from "./engine/script";
 
 export const SCRIPT_DATA: Record<string, ScriptEntry[]> = {
     "intro_game1": [
@@ -21,12 +21,21 @@ export const SCRIPT_DATA: Record<string, ScriptEntry[]> = {
             showNotification("Thông báo", "Đã sắp đến hạn đóng đăng ký DSTC. Hãy nhanh tay lên nhé!", 5000);
         }],
         ["s1.leadin", "Bạn", "Ô, đã sắp hết hạn rồi sao? Để mở ra check phát."],
-        ["s1.registration", "Bạn", "..."],
-        ["s1.registration", "Bạn", "Thế này thì phải nhanh lên thôi."],
+        ["s1.registration.menu", "Bạn", "..."],
+        ["s1.registration.menu", "Bạn", "Thế này thì phải nhanh lên thôi."],
+        ["s1.registration.menu", "", ""],
+        ["s1.registration.findingmatch", "", "", null, "s1->findingmatch"],
+        ["s1.registration.matchfound", "", "", null, "s1->matchfound"],
+        ["s1.chat", "", "", () => {
+            console.log("Attempting to move window with ID 'dstc-dashboard' to (50, 25)");
+            moveWindow("dstc-dashboard", 50, 25, {
+                duration: 0.5,
+            });
+        }, "s1->chat"],
     ],
 
     "branch_example": [
-        ["s1.leadin", "Người lạ", "Chào cậu, cậu có phải là người vừa nãy không?"],
+        ["s1.leadin", "Người lạ", "Chào cậu, cậu có phải là người vừa nãy không?", null, "introduction"],
         ["s1.leadin", "Bạn", "Hả? Tôi á?"],
     ]
 };
