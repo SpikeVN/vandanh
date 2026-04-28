@@ -25,7 +25,12 @@ import Game from "./components/Game";
 import { registerEvent } from "./engine/chatTrigger";
 
 const App: Component = () => {
-    let [stage, setStage] = createSignal(GameStage.PLAY);
+    let [stage, setStage] = createSignal(GameStage.LOADING_SCREEN);
+
+    if (import.meta.env.DEV) {
+        setStage(GameStage.PLAY);
+    }
+
     let userdata: UserData = {
         name: "Lân",
         email: "lan@cteftu.id.vn",
@@ -33,8 +38,12 @@ const App: Component = () => {
         saves: new Map<string, Progress>(),
     };
 
-    registerEvent("changescreen_loading", () => setStage(GameStage.LOADING_SCREEN));
-    registerEvent("changescreen_main_menu", () => setStage(GameStage.MAIN_MENU));
+    registerEvent("changescreen_loading", () =>
+        setStage(GameStage.LOADING_SCREEN),
+    );
+    registerEvent("changescreen_main_menu", () =>
+        setStage(GameStage.MAIN_MENU),
+    );
     registerEvent("changescreen_play", () => setStage(GameStage.PLAY));
     registerEvent("changescreen_saves", () => setStage(GameStage.SAVES));
     registerEvent("changescreen_settings", () => setStage(GameStage.SETTINGS));
