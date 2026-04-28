@@ -8,27 +8,87 @@ import {
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { TextPlugin } from "gsap/TextPlugin";
-import { invokeEvent, registerEvent } from "../engine/chatTrigger";
+import { invokeEvent } from "../engine/events";
 import DraggableWindow from "./winlib/DraggableWindow";
 
 import "./styles/VisualNovelTextWindow.css";
-import { EventName } from "..";
+import {
+    currentLine,
+    getNextText,
+    ScriptEntry,
+    invokeCurrentTrigger,
+} from "../engine/script";
 gsap.registerPlugin(TextPlugin, SplitText);
 
 const CHAR_ANIMATION_DURATION = 0.05;
 
-interface VisualNovelTextWindowProps {
-    getNextText: () => [string, string] | [string, string, EventName] | [string, string, () => void] | null; // Returns null when no more text
-    onDone?: () => void;
+type TextFormat =
+    | "normal"
+    | "bold"
+    | "italic"
+    | "bold-italic"
+    | "strikethrough"
+    | "monospace";
+
+interface ParsedText {
+    text: string;
+    format: TextFormat;
 }
 
-const VisualNovelTextWindow: Component<VisualNovelTextWindowProps> = (
-    props,
-) => {
+const parseMarkdown = (text: string): ParsedText => {
+    let format: TextFormat = "normal";
+    let cleanText = text;
+
+    // Check for bold-italic (*** or ___ or **_ combinations)
+    if (
+        (text.startsWith("***") && text.endsWith("***")) ||
+        (text.startsWith("___") && text.endsWith("___"))
+    ) {
+        format = "bold-italic";
+        cleanText = text.slice(3, -3);
+    }
+    // Check for bold (** or __)
+    else if (
+        (text.startsWith("**") && text.endsWith("**")) ||
+        (text.startsWith("__") && text.endsWith("__"))
+    ) {
+        format = "bold";
+        cleanText = text.slice(2, -2);
+    }
+    // Check for italic (* or _)
+    else if (
+        (text.startsWith("*") &&
+            text.endsWith("*") &&
+            !text.startsWith("**")) ||
+        (text.startsWith("_") && text.endsWith("_") && !text.startsWith("__"))
+    ) {
+        format = "italic";
+        cleanText = text.slice(1, -1);
+    }
+    // Check for strikethrough (~~)
+    else if (text.startsWith("~~") && text.endsWith("~~")) {
+        format = "strikethrough";
+        cleanText = text.slice(2, -2);
+    }
+    // Check for monospace (`)
+    else if (
+        text.startsWith("`") &&
+        text.endsWith("`") &&
+        !text.startsWith("``")
+    ) {
+        format = "monospace";
+        cleanText = text.slice(1, -1);
+    }
+
+    return { text: cleanText, format };
+};
+
+const VisualNovelTextWindow: Component = (props) => {
     let textContainer: HTMLDivElement | undefined;
     let textElement: HTMLParagraphElement | undefined;
 
     const [currentText, setCurrentText] = createSignal<string | null>(null);
+    const [textFormat, setTextFormat] = createSignal<TextFormat>("normal");
     const [isAnimating, setIsAnimating] = createSignal(false);
     const [isWaitingForInput, setIsWaitingForInput] = createSignal(false);
     const [characterName, setCharacterName] = createSignal("");
@@ -37,7 +97,7 @@ const VisualNovelTextWindow: Component<VisualNovelTextWindowProps> = (
     let mouseDownTime = 0;
 
     const animateText = () => {
-        if (!textElement || !currentText()) return;
+        if (!textElement || currentText() === null) return;
 
         // Kill any existing timeline
         if (timeline) {
@@ -46,6 +106,14 @@ const VisualNovelTextWindow: Component<VisualNovelTextWindowProps> = (
 
         // Reset the text element to be empty for animation
         textElement.textContent = "";
+
+        if (currentText() === "") {
+            setIsAnimating(false);
+            setIsWaitingForInput(true);
+            invokeCurrentTrigger();
+            return;
+        }
+
         setIsAnimating(true);
 
         // Small delay to ensure DOM update
@@ -59,6 +127,7 @@ const VisualNovelTextWindow: Component<VisualNovelTextWindowProps> = (
                 onComplete: () => {
                     setIsAnimating(false);
                     setIsWaitingForInput(true);
+                    invokeCurrentTrigger();
                 },
             });
 
@@ -72,24 +141,20 @@ const VisualNovelTextWindow: Component<VisualNovelTextWindowProps> = (
     };
 
     const loadNextText = () => {
-        const nextText = props.getNextText();
+        setIsWaitingForInput(false);
+        const nextText = getNextText();
 
         if (nextText === null) {
             // No more text
             setCurrentText(null);
-            setIsWaitingForInput(false);
-            props.onDone?.();
+            setTextFormat("normal");
             return;
         }
 
-        setCurrentText(nextText[1]);
-        setCharacterName(nextText[0]);
-        if (typeof nextText[2] === "string") {
-            invokeEvent(nextText[2]);
-        } else if (typeof nextText[2] === "function") {
-            nextText[2]();
-        }
-        setIsWaitingForInput(false);
+        const parsed = parseMarkdown(nextText[2]);
+        setCurrentText(parsed.text);
+        setTextFormat(parsed.format);
+        setCharacterName(nextText[1]);
     };
 
     const handleAdvance = () => {
@@ -127,8 +192,14 @@ const VisualNovelTextWindow: Component<VisualNovelTextWindowProps> = (
     };
 
     onMount(() => {
-        // Load first text
-        loadNextText();
+        // Load initial state from the script engine without advancing
+        const line = currentLine();
+        if (line) {
+            const parsed = parseMarkdown(line[2]);
+            setCurrentText(parsed.text);
+            setTextFormat(parsed.format);
+            setCharacterName(line[1]);
+        }
 
         // Add event listeners
         document.addEventListener("keydown", handleKeyDown);
@@ -141,7 +212,7 @@ const VisualNovelTextWindow: Component<VisualNovelTextWindowProps> = (
 
     createEffect(() => {
         // Trigger animation whenever currentText changes
-        if (currentText()) {
+        if (currentText() !== null) {
             animateText();
         }
     });
@@ -173,14 +244,16 @@ const VisualNovelTextWindow: Component<VisualNovelTextWindowProps> = (
                     "user-select": "none",
                 }}
             >
-                <div class="visualnovel-title text-md font-semibold">{characterName()}</div>
+                <div class="visualnovel-title text-md font-semibold">
+                    {characterName()}
+                </div>
                 <div
                     ref={textContainer}
                     class="visualnovel-content cursor-pointer"
                 >
                     <p
                         ref={textElement}
-                        class="text-lg font-normal text-white text-left px-4 pt-4"
+                        class={`text-lg font-normal text-white text-left px-4 pt-4 vn-text-${textFormat()}`}
                         style={{
                             "word-wrap": "break-word",
                         }}
@@ -192,3 +265,6 @@ const VisualNovelTextWindow: Component<VisualNovelTextWindowProps> = (
 };
 
 export default VisualNovelTextWindow;
+function onDone() {
+    throw new Error("Function not implemented.");
+}

@@ -10,10 +10,9 @@ import DraggableWindow from "./winlib/DraggableWindow";
 import "./styles/DSTCWindow.css";
 import BasicButton from "./winlib/BasicButton";
 import Tooltip from "./winlib/Tooltip";
+import { userdata } from "../engine/userdata";
 
-export default function DSTCWindow(props: {
-    userdata: { name: string; email: string };
-}) {
+export default function DSTCWindow() {
     let [ww, setww] = createSignal(936);
     let [wh, setwh] = createSignal(500);
 
@@ -89,7 +88,7 @@ export default function DSTCWindow(props: {
                 >
                     <Switch>
                         <Match when={windowContent() === "registration"}>
-                            <DSTCRegistration userdata={props.userdata} />
+                            <DSTCRegistration />
                         </Match>
                     </Switch>
                 </div>
@@ -111,7 +110,7 @@ function formatSeconds(totalSeconds: number): string {
     return `${h}:${m}:${s}`;
 }
 
-function DSTCRegistration(props: { userdata: { name: string } }) {
+function DSTCRegistration() {
     let hours = new Date().getHours();
     let [timeLeft, setTimeLeft] = createSignal(120);
 
@@ -181,7 +180,7 @@ function DSTCRegistration(props: { userdata: { name: string } }) {
         <div class="w-full h-full">
             <div class="w-full py-2 px-6">
                 Chào buổi {hours < 12 ? "sáng" : hours < 18 ? "chiều" : "tối"},{" "}
-                {props.userdata.name}.
+                {userdata.name}.
             </div>
             <div class="w-full py-2 px-6 border-t border-b border-fg2 flex flex-row items-center justify-between">
                 <div>

@@ -4,7 +4,7 @@ import logoImage from "../../assets/images/logo.png";
 
 import ticketImage from "../../assets/images/ticket.svg";
 import MenuButton1 from "./winlib/MenuButton1";
-import { GameStage } from "..";
+import { GameStage } from "../types";
 
 export default function MainMenu(props: {
     doneCallback: (_: GameStage) => void;

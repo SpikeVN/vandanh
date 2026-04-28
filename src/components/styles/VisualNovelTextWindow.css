@@ -45,3 +45,46 @@
     clip-path: inherit;
     z-index: -1;
 }
+
+/* Text formatting classes */
+.vn-text-normal {
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.vn-text-bold {
+    font-weight: bold;
+    font-style: normal;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.vn-text-italic {
+    font-weight: normal;
+    font-style: italic;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.vn-text-bold-italic {
+    font-weight: bold;
+    font-style: italic;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.vn-text-strikethrough {
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: line-through;
+    font-family: inherit;
+}
+
+.vn-text-monospace {
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    font-family: "OCR-A BT", monospace;
+}

@@ -1,0 +1,69 @@
+.fullscreen-narrator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    pointer-events: auto;
+}
+
+.fsn-text {
+    font-size: 2rem;
+    font-weight: 400;
+    text-align: center;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.fsn-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* Text formatting classes */
+.fsn-text-normal {
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.fsn-text-bold {
+    font-weight: bold;
+    font-style: normal;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.fsn-text-italic {
+    font-weight: normal;
+    font-style: italic;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.fsn-text-bold-italic {
+    font-weight: bold;
+    font-style: italic;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.fsn-text-strikethrough {
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: line-through;
+    font-family: inherit;
+}
+
+.fsn-text-monospace {
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    font-family: "Courier New", Courier, monospace;
+}

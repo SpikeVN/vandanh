@@ -1,14 +1,14 @@
-import { EventName } from "..";
+import { EventName } from "../registry";
 
-let TRIGGER_DB: Record<string, () => void> = {};
+let EVENT_DB: Record<string, () => void> = {};
 
 export function registerEvent(trigger: EventName, callback: () => void) {
-    TRIGGER_DB[trigger] = callback;
+    EVENT_DB[trigger] = callback;
 }
 
 export function invokeEvent(trigger: EventName) {
-    if (TRIGGER_DB[trigger]) {
-        TRIGGER_DB[trigger]();
+    if (EVENT_DB[trigger]) {
+        EVENT_DB[trigger]();
     } else {
         console.warn(`No event found for: ${trigger}`);
     }

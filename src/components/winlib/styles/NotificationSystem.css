@@ -1,0 +1,122 @@
+.notification-container {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    padding-right: 25px;
+    z-index: 5000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.notification-item {
+    pointer-events: auto;
+    position: relative;
+    min-width: 250px;
+    max-width: 400px;
+    height: auto;
+    min-height: 80px;
+    animation: notificationSlideIn 0.3s ease-out forwards;
+    display: flex;
+    flex-direction: column;
+
+    --clip-amount: 15px;
+}
+
+.notification-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+
+    margin-left: 22px;
+    margin-right: 22px;
+    margin-top: -1px;
+
+    background-color: var(--color-fg);
+    color: var(--color-fg);
+    
+    clip-path: polygon(
+        0 0, 
+        calc(100% - var(--clip-amount)) 0, 
+        100% var(--clip-amount), 
+        100% 100%, 
+        var(--clip-amount) 100%,
+        0 calc(100% - var(--clip-amount)),
+        0 0
+    );
+}
+
+.notification-title {
+    font-weight: 600;
+    padding: 0.1rem 1rem;
+    width: fit-content;
+    padding-right: 2rem;
+
+    clip-path: polygon(
+        0 0, 
+        100% 0, 
+        calc(100% - var(--clip-amount)) 100%, 
+        0 100%, 
+        0 0
+    );
+    
+    color: var(--color-bg);
+    background: var(--color-fg);
+}
+
+.notification-text {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    font-size: 0.9rem;
+    word-break: break-word;
+}
+
+.notification-content::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    background: var(--color-bg);
+    clip-path: inherit;
+    z-index: -1;
+}
+
+.notification-item .point {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+@keyframes notificationSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.notification-item.closing {
+    animation: notificationSlideOut 0.3s ease-in forwards;
+}
+
+@keyframes notificationSlideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
