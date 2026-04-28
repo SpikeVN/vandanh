@@ -1,17 +1,20 @@
 import { UserData } from "../types";
-import { setCurrentScriptIndex } from "./script";
+import { setCurrentScriptIndex, setCurrentPath } from "./script";
 
 export let userdata: UserData = {
     name: "Lân",
     email: "lan@cteftu.id.vn",
     currentSave: "default",
     saves: {
-        "default": {
+        default: {
             name: "Default Save",
             timestamp: 0,
-            data: 4,
+            path: "intro_game1",
+            index: 10,
         },
     },
 };
 
-setCurrentScriptIndex(userdata.saves[userdata.currentSave].data);
+const currentProgress = userdata.saves[userdata.currentSave];
+setCurrentPath(currentProgress.path);
+setCurrentScriptIndex(currentProgress.index);

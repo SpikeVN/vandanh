@@ -10,12 +10,13 @@ export enum GameStage {
 export interface Progress {
     name: string;
     timestamp: number;
-    data: number;
+    path: string;
+    index: number;
 }
 
 export interface UserData {
     name: string;
     email: string;
     currentSave: string;
-    saves: {[key: string]: Progress};
+    saves: { [key: string]: Progress };
 }
