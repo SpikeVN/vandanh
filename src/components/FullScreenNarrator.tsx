@@ -212,7 +212,7 @@ const FullScreenNarrator: Component = () => {
 
     return (
         <div
-            class="fullscreen-narrator cursor-pointer"
+            class="fullscreen-narrator cursor-pointer flex flex-col gap-3 select-none"
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
         >
@@ -221,10 +221,11 @@ const FullScreenNarrator: Component = () => {
                 style={{
                     "font-family": "Cormorant Garamond, serif",
                 }}
-                class={`text-mont w-[80%] lg:w-[50%] fsn-text fsn-text-${textFormat()}`}
+                class={`text-accent font-medium w-[80%] lg:w-[40%] fsn-text fsn-text-${textFormat()}`}
             >
                 {displayText()}
             </p>
+            <p class="text-fg2">Bấm bất kỳ phím nào hoặc click để tiếp tục.</p>
         </div>
     );
 };

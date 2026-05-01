@@ -13,25 +13,12 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    background: var(--color-fg); /* Border color */
-
-    --clip-amount: 20px;
-
-    clip-path: polygon(0px 0, calc(100% - var(--clip-amount)) 0, 100% var(--clip-amount), 100%  100%, var(--clip-amount) 100%, 0 calc(100% - var(--clip-amount)), 0 var(--clip-amount));
-}
-
-.standard-window-inner::after {
-    content: "";
-    position: absolute;
-    inset: 1px;
-    background: var(--color-bg);
-    clip-path: inherit;
-    z-index: -1;
+    background: var(--color-bg)
 }
 
 .standard-titlebar {
     padding: 8px 18px;
-    background: var(--color-fg);
+    background: var(--color-accent);
     color: var(--color-bg);
     font-weight: bold;
     font-size: 14px;
@@ -40,6 +27,9 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    width: fit-content;
+    margin-bottom: -1rem;
+    z-index: 1;
 }
 
 .standard-titlebar:active {
@@ -49,10 +39,12 @@
 .standard-content {
     flex: 1;
     padding: 10px 15px;
-    color: #e0e0e0;
+    color: var(--color-fg);
     overflow: auto;
     font-size: 14px;
     line-height: 1.5;
+    border: solid 1px var(--color-fg2);
+    padding-top: 1.5rem;
 }
 
 /* Scrollbar styling */

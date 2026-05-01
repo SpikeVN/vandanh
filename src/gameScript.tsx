@@ -1,41 +1,23 @@
 ﻿import { showNotification } from "./engine/notification";
-import { getWindowApi, moveWindow, ScriptEntry } from "./engine/script";
+import { ScriptEntry } from "./engine/script";
 
 export const SCRIPT_DATA: Record<string, ScriptEntry[]> = {
     "intro_game1": [
         // ===== SECTION 1 =====
         // ----- lead-in -----
-        ["s1.blank", "System", "*Tiếng gió thổi qua tán lá, âm thanh xào xạc của mùa thu. Tiếng gió rít qua khe cửa sổ.*"],
-        ["s1.blank", "System", "*Căn phòng bừa bộn với sách giáo trình thuật toán, vỏ lon cà phê rỗng và dây cáp máy tính giăng khắp nơi.*"],
-        ["s1.blank", "System", "*Ánh sáng duy nhất đến từ màn hình laptop phản chiếu lên cặp kính cận dày cộm.*"],
-        ["s1.blank", "System", "*Ngoài cửa sổ, tiếng gió thu rít qua khe cửa nghe khô khốc.*"],
+        ["s1.blank", "System", "*Ở một ngôi làng bé nhỏ, có hai chị em cùng cha khác mẹ tên là Tấm và Cám.*"],
+        ["s1.blank", "System", "*Cha Tấm hết mực yêu thương cô, nhưng sau đó không lâu ông cũng qua đời.*"],
+        ["s1.blank", "System", "*Tấm phải sống chung với mụ dì ghẻ cay nghiệt.*"],
+        ["s1.blank", "System", "*Hằng ngày, Tấm phải làm hết công việc trong nhà, còn Cám thì được lêu lổng vui chơi.*"],
 
-        ["s1.leadin", "Bạn", "Gió lạnh thật..."],
-        ["s1.leadin", "Bạn", "Tháng 7. Gió mùa về sớm hơn dự báo. Hoặc có lẽ là do cái mô hình dự báo thời tiết của mình lại sai số nữa rồi. Năm ngoái, mình đã thua ở vòng gửi xe vì tin nhầm 'đồng đội'. Năm nay... thậm chí mình còn chẳng tìm nổi một người để mà tin."],
-        ["s1.leadin", "Bạn", "*mở máy tính*", () => {
-            showNotification("Thời tiết", "Dự báo thời tiết: hôm nay độ ẩm 85%, xác suất mưa là 40%.", 2000);
+        ["s1.leadin", "Cám", "Chị Tấm! Chị edit xong cái clip Tiktok cho em chưa? Sao em đăng lên nãy giờ mà mới có 2 tim? Chị chỉnh màu kiểu gì nhìn mặt em như vừa đi đào mỏ về thế?", () => {
+            showNotification("Mẹo", "Bạn có thể kéo thả các cửa sổ bằng cách nhấn giữ và kéo cửa sổ. Game tự động lưu tiến trình. Bấm vào menu BụtOS ở góc dưới bên trái màn hình để xem các tùy chọn.", 5000);
         }],
-        ["s1.leadin", "Bạn", "Sinh viên năm 2. Chuyên gia xây dựng mô hình dự báo tài chính."],
-        ["s1.leadin", "Bạn", "Có thể tính toán độ lệch chuẩn của cả một thị trường, nhưng lại không thể tính nổi cách để bắt chuyện với một người bạn cùng lớp mà không làm mọi thứ trở nên gượng gạo."],
-        ["s1.leadin", "Bạn", "Một gã mọt dữ liệu lỗi thời.", () => {
-            showNotification("Thông báo", "Đã sắp đến hạn đóng đăng ký DSTC. Hãy nhanh tay lên nhé!", 5000);
-        }],
-        ["s1.leadin", "Bạn", "Ô, đã sắp hết hạn rồi sao? Để mở ra check phát."],
-        ["s1.registration.menu", "Bạn", "..."],
-        ["s1.registration.menu", "Bạn", "Thế này thì phải nhanh lên thôi."],
-        ["s1.registration.menu", "", ""],
-        ["s1.registration.findingmatch", "", "", null, "s1->findingmatch"],
-        ["s1.registration.matchfound", "", "", null, "s1->matchfound"],
-        ["s1.chat", "", "", () => {
-            console.log("Attempting to move window with ID 'dstc-dashboard' to (50, 25)");
-            moveWindow("dstc-dashboard", 50, 25, {
-                duration: 0.5,
-            });
-        }, "s1->chat"],
+        ["s1.leadin", "Tấm", "Chị đang render, máy nó nóng quá nó lag. Với lại em quay ngược sáng thì Bụt cũng không cứu nổi cái da của em đâu Cám ạ."],
+        ["s1.leadin", "Dì ghẻ", "Tấm! Nhiệm vụ của mày là cho em nó lên xu hướng, cấm cãi!"],
+        ["s1.leadin", "Dì ghẻ", "À, mà tí nữa check hộ tao 500 cái inbox của shop nhé. Khách hỏi giá thì cứ copy-paste cái mẫu trong đấy là được. Làm xong rồi thì tao mới cho đi chơi."],
+        ["s1.leadin", "Tấm", "Ơ... nhưng con phải săn vé..."],
+        ["s1.leadin", "Dì ghẻ", "Hừ. Vé với chả viếc. Đây, nhìn đống này đi!"],
+        ["s1.leadin", "Tấm", "..."],
     ],
-
-    "branch_example": [
-        ["s1.leadin", "Người lạ", "Chào cậu, cậu có phải là người vừa nãy không?", null, "introduction"],
-        ["s1.leadin", "Bạn", "Hả? Tôi á?"],
-    ]
 };

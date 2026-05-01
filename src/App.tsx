@@ -24,6 +24,7 @@ import MainMenu from "./components/MainMenu";
 import Game from "./components/Game";
 import { registerEvent } from "./engine/events";
 import NotificationSystem from "./components/winlib/NotificationSystem";
+import { loadUserdata } from "./engine/userdata";
 
 const App: Component = () => {
     let [stage, setStage] = createSignal(GameStage.LOADING_SCREEN);
@@ -42,6 +43,8 @@ const App: Component = () => {
     registerEvent("changescreen_saves", () => setStage(GameStage.SAVES));
     registerEvent("changescreen_settings", () => setStage(GameStage.SETTINGS));
     registerEvent("changescreen_credits", () => setStage(GameStage.CREDITS));
+
+    loadUserdata();
 
     return (
         <>

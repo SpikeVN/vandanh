@@ -10,11 +10,13 @@ export let userdata: UserData = {
             name: "Default Save",
             timestamp: 0,
             path: "intro_game1",
-            index: import.meta.env.DEV ? 15 : 0,
+            index: 4,
         },
     },
 };
 
-const currentProgress = userdata.saves[userdata.currentSave];
-setCurrentPath(currentProgress.path);
-setCurrentScriptIndex(currentProgress.index);
+export const loadUserdata = () => {
+    const currentProgress = userdata.saves[userdata.currentSave];
+    setCurrentPath(currentProgress.path);
+    setCurrentScriptIndex(currentProgress.index);
+};

@@ -1,9 +1,8 @@
-import { Match, Show, Switch } from "solid-js";
+import { Match, Switch } from "solid-js";
 import { sceneAt } from "../engine/script";
-import DSTCWindow from "./DSTCWindow";
 import VisualNovelTextWindow from "./VisualNovelTextWindow";
 import FullScreenNarrator from "./FullScreenNarrator";
-import ChatWindow from "./ChatWindow";
+import StandardWindow from "./winlib/StandardWindow";
 
 export default function Section1() {
     return (
@@ -13,20 +12,12 @@ export default function Section1() {
                     <FullScreenNarrator />
                 </Match>
                 <Match when={sceneAt(1) == "leadin"}>
+                    <StandardWindow>
+                        hi
+                    </StandardWindow>
                     <VisualNovelTextWindow />
                 </Match>
-                <Match
-                    when={sceneAt(1) == "registration" || sceneAt(1) == "chat"}
-                >
-                    <DSTCWindow />
-                    <Show when={sceneAt(1) != "chat"}>
-                        <VisualNovelTextWindow />
-                    </Show>
-                </Match>
             </Switch>
-            <Show when={sceneAt(1) == "chat"}>
-                <ChatWindow />
-            </Show>
         </>
     );
 }

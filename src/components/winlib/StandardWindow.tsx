@@ -70,8 +70,8 @@ const StandardWindow: Component<StandardWindowProps> = (props) => {
             allowOffScreen={props.allowOffScreen}
         >
             <div class="standard-window-inner">
-                <div class="standard-titlebar">{title()}</div>
-                <div class="standard-content">{props.children}</div>
+                <div class="standard-titlebar thick-shadow">{title()}</div>
+                <div class="standard-content thick-shadow">{props.children}</div>
             </div>
         </DraggableWindow>
     );

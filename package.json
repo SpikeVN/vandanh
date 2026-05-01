@@ -1,5 +1,5 @@
 {
-  "name": "vite-template-solid",
+  "name": "butcuacotam2",
   "version": "0.0.1-ALPHA",
   "description": "",
   "type": "module",
@@ -9,7 +9,7 @@
     "build": "vite build",
     "serve": "vite preview"
   },
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.13",
     "solid-devtools": "^0.34.3",

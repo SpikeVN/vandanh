@@ -249,7 +249,7 @@ const VisualNovelTextWindow: Component = (props) => {
                     </div>
                     <div
                         ref={textContainer}
-                        class="visualnovel-content cursor-pointer"
+                        class="visualnovel-content thick-shadow cursor-pointer"
                     >
                         <p
                             ref={textElement}
