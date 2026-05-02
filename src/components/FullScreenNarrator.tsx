@@ -221,7 +221,7 @@ const FullScreenNarrator: Component = () => {
                 style={{
                     "font-family": "Cormorant Garamond, serif",
                 }}
-                class={`text-accent font-medium w-[80%] lg:w-[40%] fsn-text fsn-text-${textFormat()}`}
+                class={`text-accent font-medium text-4xl w-[80%] lg:w-[40%] fsn-text fsn-text-${textFormat()}`}
             >
                 {displayText()}
             </p>

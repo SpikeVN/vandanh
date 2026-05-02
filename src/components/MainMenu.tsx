@@ -2,7 +2,6 @@ import { onMount } from "solid-js";
 import gsap from "gsap";
 
 import { GameStage } from "../types";
-import { ArrowRight } from "lucide-solid";
 
 import landingGraphics from "../../assets/images/landing-graphics.svg";
 import "./styles/MainMenu.css";
@@ -20,10 +19,14 @@ export default function MainMenu(props: {
                 autoAlpha: 0,
                 duration: 1,
             })
-            .from(blurred, {
-                autoAlpha: 0,
-                duration: 2,
-            }, "<");
+            .from(
+                blurred,
+                {
+                    autoAlpha: 0,
+                    duration: 2,
+                },
+                "<",
+            );
     });
 
     return (
@@ -56,10 +59,7 @@ export default function MainMenu(props: {
                                 <p class="text-accent text-xl font-semibold">
                                     Bắt đầu
                                 </p>
-                                <ArrowRight
-                                    color="var(--color-accent)"
-                                    size={24}
-                                />
+                                <ArrowRight />
                             </button>
                             <button
                                 class="lighten animated-underline px-9 py-3 flex flex-row gap-3 items-center justify-center"
@@ -70,10 +70,7 @@ export default function MainMenu(props: {
                                 <p class="text-accent text-xl font-semibold">
                                     Credits
                                 </p>
-                                <ArrowRight
-                                    color="var(--color-accent)"
-                                    size={24}
-                                />
+                                <ArrowRight />
                             </button>
                         </div>
                         <div class="flex flex-col gap-1 items-start justify-center">
@@ -86,19 +83,13 @@ export default function MainMenu(props: {
                                 <p class="text-accent text-xl font-semibold">
                                     Cài đặt
                                 </p>
-                                <ArrowRight
-                                    color="var(--color-accent)"
-                                    size={24}
-                                />
+                                <ArrowRight />
                             </button>
                             <button class="lighten animated-underline px-9 py-3 flex flex-row gap-3 items-center justify-center">
                                 <p class="text-accent text-xl font-semibold">
                                     Về trang chủ
                                 </p>
-                                <ArrowRight
-                                    color="var(--color-accent)"
-                                    size={24}
-                                />
+                                <ArrowRight />
                             </button>
                         </div>
                     </div>
@@ -289,3 +280,23 @@ const starryPath = (
         </defs>
     </svg>
 );
+
+const ArrowRight = () => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-arrow-right-icon lucide-arrow-right"
+        >
+            <path stroke="var(--color-accent)" d="M5 12h14" />
+            <path stroke="var(--color-accent)" d="m12 5 7 7-7 7" />
+        </svg>
+    );
+};
