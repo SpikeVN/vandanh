@@ -12,12 +12,14 @@ export default function Section1() {
                     <FullScreenNarrator />
                 </Match>
                 <Match when={sceneAt(1) == "leadin"}>
-                    <StandardWindow>
-                        hi
-                    </StandardWindow>
+                    <TicketWindow />
                     <VisualNovelTextWindow />
                 </Match>
             </Switch>
         </>
     );
+}
+
+function TicketWindow() {
+    return <StandardWindow title="Phòng chờ">đá</StandardWindow>;
 }

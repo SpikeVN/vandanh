@@ -34,38 +34,23 @@
 
     margin-left: 22px;
     margin-right: 22px;
-    margin-top: -1px;
+    padding-top: 0.75rem;
 
-    background-color: var(--color-fg);
+    background-color: var(--color-bg);
     color: var(--color-fg);
-    
-    clip-path: polygon(
-        0 0, 
-        calc(100% - var(--clip-amount)) 0, 
-        100% var(--clip-amount), 
-        100% 100%, 
-        var(--clip-amount) 100%,
-        0 calc(100% - var(--clip-amount)),
-        0 0
-    );
+    border: solid 1px var(--color-fg2)
+
 }
 
 .notification-title {
     font-weight: 600;
-    padding: 0.1rem 1rem;
+    padding: 0.5rem 1rem;
     width: fit-content;
     padding-right: 2rem;
-
-    clip-path: polygon(
-        0 0, 
-        100% 0, 
-        calc(100% - var(--clip-amount)) 100%, 
-        0 100%, 
-        0 0
-    );
-    
+    position: absolute;
+    top: -1.2rem;
     color: var(--color-bg);
-    background: var(--color-fg);
+    background: var(--color-accent);
 }
 
 .notification-text {

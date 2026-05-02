@@ -1,9 +1,9 @@
 import {
     createSignal,
-    Signal,
     createMemo,
     batch,
     createEffect,
+    createRoot,
 } from "solid-js";
 import { EventName } from "../registry";
 import { SCRIPT_DATA } from "../gameScript";
@@ -25,7 +25,6 @@ export type ScriptEntry = [
 
 export type ScriptPath = ScriptEntry[];
 
-// Pre-process tags for all paths
 const TAG_INDEX: Record<string, Record<string, number>> = {};
 Object.entries(SCRIPT_DATA).forEach(([pathName, entries]) => {
     TAG_INDEX[pathName] = {};
@@ -45,30 +44,31 @@ export let [currentLine, setCurrentLine] = createSignal<ScriptEntry>(
     SCRIPT_DATA["intro_game1"][0],
 );
 
-export const currentScene = createMemo(() => currentLine()[0]);
-export const sceneLevels = createMemo(() => currentScene().split("."));
+export const { currentScene, sceneLevels, currentPathData } = createRoot(() => {
+    const currentScene = createMemo(() => currentLine()[0]);
+    const sceneLevels = createMemo(() => currentScene().split("."));
+    const currentPathData = createMemo(
+        () => SCRIPT_DATA[currentPath()] || SCRIPT_DATA["intro_game1"],
+    );
+
+    createMemo(() => {
+        const path = currentPathData();
+        setCurrentLine(path[currentScriptIndex()]);
+    });
+
+    createEffect(() => {
+        const line = currentLine();
+        if (line && line[1] === "" && line[2] === "") {
+            invokeCurrentTrigger();
+        }
+    });
+
+    return { currentScene, sceneLevels, currentPathData };
+});
+
 export const sceneAt = (level: number) => sceneLevels()[level];
 
-export const currentPathData = createMemo(
-    () => SCRIPT_DATA[currentPath()] || SCRIPT_DATA["intro_game1"],
-);
-
-createMemo(() => {
-    const path = currentPathData();
-    setCurrentLine(path[currentScriptIndex()]);
-});
-
-// Automatically trigger callbacks for "hidden" lines (no speaker and no text)
-// This ensures logic runs even if no UI component is currently mounted to handle it.
-createEffect(() => {
-    const line = currentLine();
-    if (line && line[1] === "" && line[2] === "") {
-        invokeCurrentTrigger();
-    }
-});
-
 export const getNextText = (): ScriptEntry | null => {
-    // Always move to the NEXT line
     const nextIndex = currentScriptIndex() + 1;
     const path = currentPathData();
 

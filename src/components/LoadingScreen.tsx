@@ -4,7 +4,6 @@ import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { SplitText } from "gsap/SplitText";
 import { TextPlugin } from "gsap/TextPlugin";
 
-import cteLogoFile from "../../assets/images/cte-logo.svg";
 import ftuLogoFile from "../../assets/images/FTU_logo.png";
 import fyuLogoFile from "../../assets/images/fyu.png";
 import ntqLogoFile from "../../assets/images/NTQ-logo.png";
@@ -69,7 +68,7 @@ export default function LoadingScreen(props: { doneCallback: () => void }) {
 
 function LogoCTE(props: { doneCallback: () => void }) {
     let text!: HTMLParagraphElement;
-    let cteLogoImageElement!: HTMLImageElement;
+    let cteLogoImageElement!: HTMLDivElement;
     let cteLogo!: HTMLDivElement;
 
     onMount(async () => {
@@ -147,17 +146,33 @@ function LogoCTE(props: { doneCallback: () => void }) {
             style={{
                 inset: 0,
                 margin: "auto",
-                width: "390px",
+                width: "410px",
                 height: "72px",
             }}
         >
-            <img
-                id="cteLogo"
-                ref={cteLogoImageElement}
-                src={cteLogoFile}
-                class="h-18 w-auto"
-                alt="Logo CLB Khoa học công nghệ trong Kinh tế và Kinh doanh"
-            />
+            <div id="cteLogo" ref={cteLogoImageElement} class="h-18 w-auto">
+                <svg
+                    style={{
+                        width: "auto",
+                        height: "100%",
+                    }}
+                    viewBox="0 0 39 39"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <g clip-path="url(#clip0_82_150)">
+                        <path
+                            d="M7 0H0V39H7H15V32H7V7H16V39H23V7H32V16H26V23H32V32H24V39H32H39V7V0H7Z"
+                            fill="white"
+                        />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_82_150">
+                            <rect width="39" height="39" fill="white" />
+                        </clipPath>
+                    </defs>
+                </svg>
+            </div>
             <div ref={text} class="flex flex-col w-full text-xl font-semibold">
                 <p id="cte-line1">CLUB OF TECHNOLOGY</p>
                 <p id="cte-line2">IN ECONOMICS</p>
@@ -279,7 +294,9 @@ function LogoFTUAndFYU(props: { doneCallback: () => void }) {
                 />
                 <div ref={fyuText} class="hidden sm:block">
                     <p class="leading-5 font-semibold">ĐOÀN TNCS HỒ CHÍ MINH</p>
-                    <p class="leading-5 font-semibold">TRƯỜNG ĐH NGOẠI THƯƠNG</p>
+                    <p class="leading-5 font-semibold">
+                        TRƯỜNG ĐH NGOẠI THƯƠNG
+                    </p>
                 </div>
             </div>
         </div>
@@ -355,7 +372,9 @@ function LogoNTQ(props: { doneCallback: () => void }) {
                     <p class="leading-5 italic text-gray-400 font-semibold">
                         in collaboration with
                     </p>
-                    <p class="leading-5 text-xl font-semibold">NTQ Solutions, JSC</p>
+                    <p class="leading-5 text-xl font-semibold">
+                        NTQ Solutions, JSC
+                    </p>
                 </div>
                 <img
                     ref={ntqImage}

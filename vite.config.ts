@@ -12,6 +12,18 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        passes: 3,
+      },
+      format: {
+        comments: false,
+      },
+    },
+    cssMinify: true,
   },
   publicDir: "static"
 });

@@ -232,10 +232,10 @@ const VisualNovelTextWindow: Component = (props) => {
             <DraggableWindow
                 draggableMode="anywhere"
                 initialWidth={825}
-                initialHeight={150}
+                initialHeight={160}
                 class="visualnovel-window"
                 initialX={window.innerWidth / 2 - 412}
-                initialY={window.innerHeight - 150 - 24}
+                initialY={window.innerHeight - 160 - 24}
                 alwaysOnTop={true}
             >
                 <div
@@ -258,6 +258,22 @@ const VisualNovelTextWindow: Component = (props) => {
                                 "word-wrap": "break-word",
                             }}
                         />
+                        <div class="absolute bottom-3 w-full flex items-center justify-center gap-6">
+                            <button class="font-bold text-white cursor-pointer">
+                                lịch sử chat
+                            </button>
+                            <button
+                                class="font-bold text-white cursor-pointer"
+                                onClick={() =>
+                                    invokeEvent("changescreen_main_menu")
+                                }
+                            >
+                                về menu
+                            </button>
+                            <button class="font-bold text-white cursor-pointer">
+                                cài đặt
+                            </button>
+                        </div>
                     </div>
                 </div>
             </DraggableWindow>

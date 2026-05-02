@@ -14,20 +14,6 @@ body {
     font-size: 16px;
 }
 
-.clipped-border {
-    position: relative;
-    background: var(--color-fg);
-}
-
-.clipped-border::after {
-    content: "";
-    position: absolute;
-    inset: 1px;
-    background: var(--color-bg);
-    clip-path: inherit;
-    z-index: -1;
-}
-
 .thick-shadow {
     box-shadow: 0 4px 0 0 var(--color-shadow);
 }
