@@ -44,6 +44,10 @@
     z-index: 1;
 }
 
+.standard-titlebar.no-spacing {
+    margin-bottom: 0;
+}
+
 .standard-titlebar:active {
     cursor: grabbing;
 }
@@ -59,21 +63,40 @@
     padding-top: 1.5rem;
 }
 
+.standard-content.no-padding {
+    padding: 0;
+    padding-top: 1.5rem;
+}
+
+.standard-content.no-spacing {
+    padding-top: 10px;
+}
+
+.standard-content.no-padding.no-spacing {
+    padding-top: 0;
+}
+
 /* Scrollbar styling */
 .standard-content::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
+    height: 10px;
 }
 
 .standard-content::-webkit-scrollbar-track {
-    background: #0f3460;
-    border-radius: 4px;
+    background: var(--color-bg);
+    border-radius: 0;
 }
 
 .standard-content::-webkit-scrollbar-thumb {
-    background: #16213e;
-    border-radius: 4px;
+    background: var(--color-fg2);
+    border-radius: 0;
 }
 
 .standard-content::-webkit-scrollbar-thumb:hover {
-    background: #1a1a2e;
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.standard-content::-webkit-scrollbar-corner {
+    background: var(--color-bg);
 }

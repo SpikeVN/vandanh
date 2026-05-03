@@ -44,6 +44,10 @@ interface StandardWindowProps {
     draggableSelector?: string;
     /** If true, the window can be dragged off-screen. Defaults to true. */
     allowOffScreen?: boolean;
+    /** If true, removes the default padding from the content area. */
+    noPadding?: boolean;
+    /** If true, removes the titlebar overlap/spacing. */
+    noTitlebarSpacing?: boolean;
     /** Callback to receive the StandardWindowAPI instance. */
     apiRef?: (api: StandardWindowAPI) => void;
 }
@@ -70,8 +74,21 @@ const StandardWindow: Component<StandardWindowProps> = (props) => {
             allowOffScreen={props.allowOffScreen}
         >
             <div class="standard-window-inner">
-                <div class="standard-titlebar thick-shadow">{title()}</div>
-                <div class="standard-content thick-shadow">{props.children}</div>
+                <div
+                    class="standard-titlebar thick-shadow"
+                    classList={{ "no-spacing": props.noTitlebarSpacing }}
+                >
+                    {title()}
+                </div>
+                <div
+                    class="standard-content thick-shadow"
+                    classList={{
+                        "no-padding": props.noPadding,
+                        "no-spacing": props.noTitlebarSpacing,
+                    }}
+                >
+                    {props.children}
+                </div>
             </div>
         </DraggableWindow>
     );

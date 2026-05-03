@@ -7,6 +7,8 @@ export interface WindowInfo {
     api: DraggableWindowAPI;
 }
 
+const debuginfo = import.meta.env.DEV ? (...x: any[]) => console.log(...x) : (..._: any[]) => {}
+
 const [windowDb, setWindowDb] = createSignal<Record<string, WindowInfo>>({});
 
 export { windowDb };
@@ -75,7 +77,7 @@ export function moveWindowByTitle(
     y: number,
     options?: gsap.TweenVars,
 ) {
-    console.log(
+    debuginfo(
         `[WindowManager] Moving window by title: "${title}" to (${x}, ${y})`,
     );
     const info = getWindowByTitle(title);

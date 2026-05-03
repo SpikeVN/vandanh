@@ -30,7 +30,7 @@ const App: Component = () => {
     let [stage, setStage] = createSignal(GameStage.LOADING_SCREEN);
 
     if (import.meta.env.DEV) {
-        setStage(GameStage.MAIN_MENU);
+        setStage(GameStage.PLAY);
     }
 
     registerEvent("changescreen_loading", () =>

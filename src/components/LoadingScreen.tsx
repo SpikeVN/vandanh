@@ -280,6 +280,7 @@ function LogoFTUAndFYU(props: { doneCallback: () => void }) {
                     ref={ftuLogo}
                     src={ftuLogoFile}
                     class="h-24 sm:h-18 w-auto"
+                    data-preload
                 />
                 <div ref={ftuText} class="hidden sm:block">
                     <p class="leading-5 font-semibold">TRƯỜNG ĐẠI HỌC</p>
@@ -291,6 +292,7 @@ function LogoFTUAndFYU(props: { doneCallback: () => void }) {
                     ref={fyuLogo}
                     src={fyuLogoFile}
                     class="h-24 sm:h-18 w-auto"
+                    data-preload
                 />
                 <div ref={fyuText} class="hidden sm:block">
                     <p class="leading-5 font-semibold">ĐOÀN TNCS HỒ CHÍ MINH</p>
@@ -380,6 +382,7 @@ function LogoNTQ(props: { doneCallback: () => void }) {
                     ref={ntqImage}
                     src={ntqLogoFile}
                     class="h-24 sm:h-18 w-auto"
+                    data-preload
                 />
             </div>
         </div>
